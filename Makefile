@@ -137,8 +137,14 @@ sdks: cortexa7hf-sdk cortexa8hf-sdk
 %-swu: build/conf/bblayers.conf
 	export MACHINE=$(subst -swu,,$@) && . ./sources/openembedded-core/oe-init-build-env build sources/bitbake && bitbake venus-swu
 
+%-swu-large: build/conf/bblayers.conf
+	export MACHINE=$(subst -swu-large,,$@) && . ./sources/openembedded-core/oe-init-build-env build sources/bitbake && bitbake venus-swu-large
+
 swu: build/conf/bblayers.conf
 	. ./sources/openembedded-core/oe-init-build-env build sources/bitbake && bitbake venus-swu
+
+swu-large: build/conf/bblayers.conf
+	. ./sources/openembedded-core/oe-init-build-env build sources/bitbake && bitbake venus-swu-large
 
 swus: $(addsuffix -swu,$(MACHINES))
 
