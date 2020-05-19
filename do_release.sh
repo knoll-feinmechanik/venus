@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Venus downloads from https://updates.victronenergy.com/, which is hosted by CD Networks. Because of that, it
+# can't be used by SSH to connect to. Therefore, we need to connect to the 'origin' directly, hence the
+# different DNS name in "$REMOTE"
 
 DEPLOY=deploy/venus
 REMOTE=victron_www@updates-origin.victronenergy.com
@@ -28,8 +32,17 @@ function release ()
 
 	if "$prefetch_cache" ; then
 		if ! "$PREFETCH_SCRIPT" --check-mode; then
-			echo "CDN prefetch conditions not met"
-			exit 1
+			echo
+			echo "CDN prefetch conditions not met. Prefetching preloads the SWU images to hundreds of nodes of the"
+			echo "content delivery network, allowing much faster download. Without pre-fetching, the images"
+			echo "Will still be downloaded on-demand, so aside from download speed, users won't notice it."
+			read -r -p "Continue without prefetching? (y/n): " answer
+
+			if [[ $answer == "y" ]]; then
+				prefetch_cache="false"
+			else
+				exit 1
+			fi
 		fi
 	fi
 
@@ -51,6 +64,12 @@ function release ()
 
 	if "$prefetch_cache" ; then
 		$PREFETCH_SCRIPT
+
+		if [[ $? -ne 0 ]]; then
+			echo
+			echo "CD Networks pre-fetching reported a failure. Pre-fetching is done after the release, so this"
+			echo "error does NOT mean the release failed."
+		fi
 	fi
 }
 

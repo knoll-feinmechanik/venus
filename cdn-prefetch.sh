@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Script to pre-fetch Venus images into CDN cache.
+# Script to pre-fetch Venus images into hundreds of CD Networks cache nodes.
 #
 # Wiebe Cazemier <wiebe@ytec.nl>. Approved by 'shellcheck'.
 
@@ -10,7 +10,7 @@ sshuser="victron_www"
 originserver="updates-origin.victronenergy.com"
 
 if [[ ! -f "$password_filepath" ]]; then
-  echo "Put the API key in $password_filepath. Ask Ytec (wiebe) to give it to you."
+  echo "The CD Networks API key for cache pre-fetching was not found in '$password_filepath'. Ask Ytec (Wiebe) to give it to you."
   exit 1
 fi
 
@@ -29,6 +29,9 @@ fi
 if [[ "$1" == "--check-mode" ]]; then
   exit 0
 fi
+
+echo ""
+echo "Prefetching SWU images into hundreds of CD Networks cache nodes..."
 
 set -u
 
