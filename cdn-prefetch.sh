@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Script to pre-fetch Venus images into hundreds of CD Networks cache nodes.
+# Script to send a trigger to the CDN to download the installation images to all caches nodes.
 #
 # Wiebe Cazemier <wiebe@ytec.nl>. Approved by 'shellcheck'.
 
@@ -31,7 +31,8 @@ if [[ "$1" == "--check-mode" ]]; then
 fi
 
 echo ""
-echo "Prefetching SWU images into hundreds of CD Networks cache nodes..."
+echo "Sending trigger to CDN to download installation images to all cache nodes..."
+echo ""
 
 set -u
 
