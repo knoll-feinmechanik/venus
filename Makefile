@@ -1,7 +1,7 @@
 .PHONY: bb clean clean-keep-sstate fetch fetch-all fetch-install help update-repos.conf sdk venus-image venus-images $(addsuffix bb-,$(MACHINES)) $(addsuffix -venus-image,$(MACHINES))
 
 SHELL = bash
-CONFIG ?= zeus
+CONFIG ?= dunfell
 
 -include conf/machines
 
@@ -27,8 +27,12 @@ help:
 	@echo "  Venus uses swupdate (https://github.com/sbabic/swupdate) for reliable firmware updates"
 	@echo "    make beaglebone-swu"
 	@echo "      - Builds a swu file for the beaglebone, which can be installed by sd / usb / or remotely"
+	@echo "    make beaglebone-swu-large"
+	@echo "      - Builds the large variant of the same" 
 	@echo "    make swus"
 	@echo "      - Builds swu files for all MACHINES"
+	@echo "    make swus-large"
+	@echo "      - Builds swu files for all MACHINES_LARGE"
 	@echo
 	@echo "  Building (bootable) images is also supported, but it depends on the machine"
 	@echo "    make beaglebone-venus-image"
@@ -139,10 +143,18 @@ sdks: cortexa7hf-sdk cortexa8hf-sdk
 %-swu: build/conf/bblayers.conf
 	export MACHINE=$(subst -swu,,$@) && . ./sources/openembedded-core/oe-init-build-env build sources/bitbake && bitbake venus-swu
 
+%-swu-large: build/conf/bblayers.conf
+	export MACHINE=$(subst -swu-large,,$@) && . ./sources/openembedded-core/oe-init-build-env build sources/bitbake && bitbake venus-swu-large
+
 swu: build/conf/bblayers.conf
 	. ./sources/openembedded-core/oe-init-build-env build sources/bitbake && bitbake venus-swu
 
+swu-large: build/conf/bblayers.conf
+	. ./sources/openembedded-core/oe-init-build-env build sources/bitbake && bitbake venus-swu-large
+
 swus: $(addsuffix -swu,$(MACHINES))
+
+swus-large: $(addsuffix -swu-large,$(MACHINES_LARGE))
 
 # complete machine specific build / no sdk
 %-machine: build/conf/bblayers.conf
